@@ -35,7 +35,6 @@ void CongaLine::run() {
 
     while (menuChoice != 4) {
         // cout << "\n " << myLine << "\n\n";
-        // cout << "\n"; myLine.writeTo(cout, "="); cout << "\n\n";
         cout << "Conga, Conga, Con-GA!  Conga, Conga, Con-GA!\n" << endl;
         cout << MY_MENU;
         cin >> menuChoice;
@@ -51,20 +50,19 @@ void CongaLine::run() {
             case 2:
                 cout << "Who do you want to follow? ";
                 cin >> otherPersonsName;
-                //			if ( !myLine.insertAfter(otherPersonsName,
-                //yourName) ) { 				cout << "\n***" << otherPersonsName
-                //					 << " is not dancing!\n" <<
-                //endl;
-                //			}
+                // if (!myLine.insertAfter(otherPersonsName, yourName)) {
+                //     cout << "\n***" << otherPersonsName << " is not
+                //     dancing!\n"
+                //          << endl;
+                // }
                 break;
             case 3:
                 cout << "Who do you want to precede? ";
                 cin >> otherPersonsName;
-                //			if ( !myLine.insertBefore(otherPersonsName,
-                //yourName) ) { 				cout << "\n***" << otherPersonsName
-                //					 << " is not dancing!\n" <<
-                //endl;
-                //			}
+                // if (!myLine.insertBefore(otherPersonsName, yourName)) {
+                //     cout << "\n***" << otherPersonsName << " is not dancing!\n"
+                //          << endl;
+                // }
                 break;
             case 4:
                 cout << "\nThe dance is done!\n";

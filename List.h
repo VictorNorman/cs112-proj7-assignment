@@ -40,7 +40,8 @@ public:
 	bool insertAfter(const Item &inList, const Item &newToList);
 	bool insertBefore(const Item &inList, const Item &newToList);
 
-private:
+// private:
+public: // make the inside structure public for testing purposes.
 	struct Node {
 		Node();
 		Node(Item it, Node* next);
@@ -54,7 +55,6 @@ private:
 
 	void makeADeepCopyOf(const List<Item> &original);
 
-	friend class ListTester;
 };
 
 
