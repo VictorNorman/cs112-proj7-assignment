@@ -209,3 +209,71 @@ TEST_CASE("equality") {
         REQUIRE(!(l0 == l1));
     }
 }
+
+TEST_CASE("remove") {
+    SECTION("empty list") {
+        List<int> l;
+        REQUIRE_THROWS_AS(l.remove(0), underflow_error);
+    }
+    SECTION("1-node list") {
+        List<int> l;
+        l.prepend(11);
+        REQUIRE(l.remove(0) == 11);
+        REQUIRE(l.getSize() == 0);
+        REQUIRE(l.myFirst == nullptr);
+        REQUIRE(l.myLast == nullptr);
+
+        l.prepend(22);
+        // off the end means delete last node.
+        REQUIRE(l.remove(1) == 22);
+        REQUIRE(l.getSize() == 0);
+        REQUIRE(l.myFirst == nullptr);
+        REQUIRE(l.myLast == nullptr);
+
+        l.prepend(33);
+        // off the front means delete first node.
+        REQUIRE(l.remove(-1) == 33);
+        REQUIRE(l.getSize() == 0);
+        REQUIRE(l.myFirst == nullptr);
+        REQUIRE(l.myLast == nullptr);
+    }
+    SECTION("2-node list, delete last node") {
+        List<int> l;
+        l.prepend(22);
+        l.prepend(11);
+        // index 1 is last node
+        REQUIRE(l.remove(1) == 22);
+        REQUIRE(l.getSize() == 1);
+        REQUIRE(l.myFirst->myItem == 11);
+        REQUIRE(l.myLast->myItem == 11);
+    }
+    SECTION("2-node list, delete first node") {
+        List<int> l;
+        l.prepend(22);
+        l.prepend(11);
+        // index 1 is last node
+        REQUIRE(l.remove(0) == 11);
+        REQUIRE(l.getSize() == 1);
+        REQUIRE(l.myFirst->myItem == 22);
+        REQUIRE(l.myLast->myItem == 22);
+    }
+    SECTION("3-node list, delete middle node and last node") {
+        List<int> l;
+        l.prepend(33);
+        l.prepend(22);
+        l.prepend(11);
+        // index 1 is last node
+        REQUIRE(l.remove(1) == 22);
+        REQUIRE(l.getSize() == 2);
+        REQUIRE(l.myFirst->myItem == 11);
+        REQUIRE(l.myFirst->myNext == l.myLast);
+        REQUIRE(l.myLast->myItem == 33);
+
+        l.append(44);   // list is 11, 33, 44 now.
+        REQUIRE(l.remove(2) == 44);
+        REQUIRE(l.getSize() == 2);
+        REQUIRE(l.myFirst->myItem == 11);
+        REQUIRE(l.myFirst->myNext == l.myLast);
+        REQUIRE(l.myLast->myItem == 33);
+    }
+}
