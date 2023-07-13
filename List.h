@@ -42,8 +42,7 @@ public:
     bool insertAfter(const Item &inList, const Item &newToList);
     bool insertBefore(const Item &inList, const Item &newToList);
 
-    // private:
-public:  // make the inside structure public for testing purposes.
+private:
     struct Node {
         Node();
         Node(Item it, Node *next);
@@ -264,7 +263,7 @@ Item List<Item>::remove(int index) {
         Item ret = myFirst->myItem;
         Node *dPtr = myFirst;
         myFirst = myFirst->myNext;
-        dPtr->myNext = nullptr;		// break the chain
+        dPtr->myNext = nullptr;  // break the chain
         delete dPtr;
         mySize--;
         return ret;
