@@ -1,0 +1,133 @@
+import sys
+import pexpect
+
+c = pexpect.spawn('./proj7')
+# Lots of output ending in Choose your option:
+c.expect("Ann and Bob have started a Conga Line!\r\n")
+c.expect("\r\n")
+c.expect(" =Ann=Bob\r\n")
+
+def match_menu(c):
+    c.expect("\r\n")
+    c.expect("Conga, Conga, Con-GA\!  Conga, Conga, Con-GA\!\r\n")
+    c.expect("\r\n")
+    c.expect("Please enter:\r\n")
+    c.expect(" 1 to join the Conga line at the end\r\n")
+    c.expect(" 2 to join the Conga line after a particular person\r\n")
+    c.expect(" 3 to join the Conga line before a particular person\r\n")
+    c.expect(" 4 to quit\r\n")
+    c.expect("--> ", timeout=2)
+
+match_menu(c)
+
+# Test append to end
+print("Testing append to end")
+c.sendline("1")
+c.expect("\r\n")
+c.expect("\r\nWhat is your name\? ")
+c.sendline("Z")
+c.expect("\r\n")
+c.expect(" =Ann=Bob=Z\r\n")
+
+print("Passed.")
+
+match_menu(c)
+
+# Test option 2: join after a person. Joining after last person.
+print("Testing joining after last person.")
+c.sendline("2")
+c.expect("\r\n")
+c.expect("\r\nWhat is your name\? ")
+c.sendline("ZZZ")
+c.expect("Who do you want to follow\? ")
+c.sendline("Z")
+c.expect("\r\n")
+c.expect(" =Ann=Bob=Z=ZZZ\r\n")
+print("Passed.")
+
+match_menu(c)
+
+# Test option 2: joining in the middle
+print("Testing joining after a person in the middle.")
+c.sendline("2")
+c.expect("\r\n")
+c.expect("\r\nWhat is your name\? ")
+c.sendline("Cat")
+c.expect("Who do you want to follow\? ")
+c.sendline("Bob")
+c.expect("\r\n")
+c.expect(" =Ann=Bob=Cat=Z=ZZZ\r\n")
+print("Passed.")
+
+match_menu(c)
+
+# Test option 3: joining before first person
+print("Testing joining before first person")
+c.sendline("3")
+c.expect("\r\n")
+c.expect("\r\nWhat is your name\? ")
+c.sendline("A")
+c.expect("Who do you want to precede\? ")
+c.sendline("Ann")
+c.expect("\r\n")
+c.expect(" =A=Ann=Bob=Cat=Z=ZZZ\r\n")
+print("Passed.")
+
+match_menu(c)
+
+# Test option 3: joining before person in middle
+print("Testing joining before person in the middle")
+c.sendline("3")
+c.expect("\r\n")
+c.expect("\r\nWhat is your name\? ")
+c.sendline("Y")
+c.expect("Who do you want to precede\? ")
+c.sendline("Z")
+c.expect("\r\n")
+c.expect(" =A=Ann=Bob=Cat=Y=Z=ZZZ\r\n")
+print("Passed.")
+
+match_menu(c)
+
+# Test joining after non-existent person
+print("Testing joining after non-existent person")
+c.sendline("2")
+c.expect("\r\n")
+c.expect("\r\nWhat is your name\? ")
+c.sendline("ASDF")
+c.expect("Who do you want to follow\? ")
+c.sendline("AAAAA")
+c.expect_exact("\r\n***AAAAA is not dancing!\r\n", timeout=5)
+c.expect(".* =A=Ann=Bob=Cat=Y=Z=ZZZ\r\n", timeout=5)
+print("Passed.")
+
+match_menu(c)
+
+# Test joining before non-existent person
+print("Testing joining before non-existent person")
+c.sendline("3")
+c.expect("\r\n")
+c.expect("\r\nWhat is your name\? ")
+c.sendline("ASDF")
+c.expect("Who do you want to precede\? ")
+c.sendline("AAAAA")
+c.expect_exact("\r\n***AAAAA is not dancing!\r\n", timeout=5)
+c.expect(".* =A=Ann=Bob=Cat=Y=Z=ZZZ\r\n", timeout=5)
+print("Passed.")
+
+match_menu(c)
+
+# Test bad option
+print("Testing entering a bad option")
+c.sendline("5")
+c.expect_exact("\r\n*** 5 is not a valid choice!\r\n", timeout=5)
+c.expect(".* =A=Ann=Bob=Cat=Y=Z=ZZZ\r\n", timeout=5)
+print("Passed.")
+
+match_menu(c)
+
+# End program
+print("Testing ending the program")
+c.sendline("4")
+c.expect("\r\nThe dance is done!")
+print("All tests passed!")
